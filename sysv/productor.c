@@ -12,14 +12,14 @@
 
 int main(void) {
     /* Crear segmento de memoria compartida */
-    int shmid = shmget(SHM_KEY, sizeof(MemoriaCompartida), 0666 | IPC_CREAT);
+    int shmid = shmget(SHM_KEY, sizeof(Datos), 0666 | IPC_CREAT);
     if (shmid ==  -1) {
         perror("Error al crear la memoria compartida");
         exit(1);
     }
 
     /* Enlazar la memoria compartida */
-    MemoriaCompartida *shm = (MemoriaCompartida *)shmat(shmid, NULL, 0);
+    Datos *shm = (Datos *)shmat(shmid, NULL, 0);
     if (shm == (void*)-1) {
         perror("Error al enlazar la memoria compartida");
         exit(1);

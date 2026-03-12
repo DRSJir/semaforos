@@ -10,13 +10,13 @@
 
 int main(void) {
     /* Crear el id del segmento de la memoria compartida */
-    int shmid = shmget(SHM_KEY, sizeof(MemoriaCompartida), 0666);
+    int shmid = shmget(SHM_KEY, sizeof(Datos), 0666);
     if (shmid == -1) {
         perror("Error al acceder a memoria compartida");
         exit(1);
     }
 
-    MemoriaCompartida *shm = (MemoriaCompartida *)shmat(shmid, NULL, 0);
+    Datos *shm = (Datos *)shmat(shmid, NULL, 0);
 
     /* Obtener los semaforos */
     int semid = semget(SEM_KEY, 2, 0666);
