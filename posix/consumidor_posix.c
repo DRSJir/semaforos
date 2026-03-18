@@ -18,6 +18,15 @@ typedef struct {
 } MemoriaCompartida;
 
 int main(void) {
+    /* Abrir semáforos nombrados */
+    sem_t *sem_datos = sem_open(SEM_DATOS, 0);
+    sem_t *sem_espacios = sem_open(SEM_ESPACIOS, 0);
+
+    if (sem_datos == SEM_FAILED || sem_espacios == SEM_FAILED) {
+        perror("Error al abrir semáforos");
+        exit(1);
+    }
+
     /* Acceder a memoria compartida */
     int shmid = shmget(SHM_KEY, sizeof(MemoriaCompartida), 0666);
     if (shmid == -1) {
@@ -31,16 +40,6 @@ int main(void) {
         perror("Error al asignar memoria compartida");
         exit(1);
     }
-
-    /* Abrir semáforos nombrados */
-    sem_t *sem_datos = sem_open(SEM_DATOS, 0);
-    sem_t *sem_espacios = sem_open(SEM_ESPACIOS, 0);
-
-    if (sem_datos == SEM_FAILED || sem_espacios == SEM_FAILED) {
-        perror("Error al abrir semáforos");
-        exit(1);
-    }
-
 
     while (1) {
 

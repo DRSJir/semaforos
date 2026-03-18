@@ -19,7 +19,15 @@ typedef struct {
 } MemoriaCompartida;
 
 int main(void) {
-    /* Crear segmento de memoria compartida*/
+    // Crear semáforos nombrados
+    sem_t *sem_espacios = sem_open(SEM_ESPACIOS, O_CREAT, 0666, 1);
+    sem_t *sem_datos = sem_open(SEM_DATOS, O_CREAT, 0666, 0);
+    if (sem_espacios == SEM_FAILED || sem_datos == SEM_FAILED) {
+        perror("Error al crear semáforos");
+        exit(1);
+    }
+
+    /* Crear memoria compartida */
     int shmid = shmget(SHM_KEY, sizeof(MemoriaCompartida), 0666 | IPC_CREAT);
     if (shmid == -1) {
         perror("Error al crear memoria compartida");
@@ -30,15 +38,6 @@ int main(void) {
     MemoriaCompartida *shm = (MemoriaCompartida *)shmat(shmid, NULL, 0);
     if (shm == (void *)-1) {
         perror("Error al asignar memoria compartida");
-        exit(1);
-    }
-
-    // Crear semáforo nombrado
-    sem_t *sem_datos = sem_open(SEM_DATOS, 0);
-    sem_t *sem_espacios = sem_open(SEM_ESPACIOS, 0);
-    
-    if (sem_espacios == SEM_FAILED || sem_datos == SEM_FAILED) {
-        perror("Error al crear semáforos");
         exit(1);
     }
 
